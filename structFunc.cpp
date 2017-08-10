@@ -106,6 +106,7 @@ int reserveTimeCmp(void *p1, void *p2)
 	}
 	return -1;
 }
+
 //==============================================//
 void statusMemcpy(void *p1, void *p2)
 {
@@ -126,7 +127,6 @@ int statusNameCmp(void *p1, void *p2)
 }
 
 //===============================================//
-
 void environMemcpy(void *p1, void *p2)
 {
 	Environ *val1 = (Environ *)p1, *val2 = (Environ *)p2;

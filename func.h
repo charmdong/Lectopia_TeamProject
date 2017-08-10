@@ -25,7 +25,6 @@ void printStatus(List *slist);			// 현재 장치들의 상태를 출력해주는 함수
 
 void airMenu(List *list);				// 에어컨 메뉴를 실행하는 함수
 int airTemp();							// 에어컨 희망 온도 값 리턴
-int airSpeed();							// 에어컨 희망 풍속 값 (풍속에 해당하는 번호) 리턴
 
 void temperMenu(List *slist);		// 수온 조절 메뉴를 실행하는 함수
 int waterTemp();						// 수온 희망 온도 값 반환해주는 함수
@@ -38,4 +37,4 @@ int Mode();	// 희망 세탁기 및 공기청정기 모드 번호 반환하는 함수
 void aircleanMenu(List *list);		// 공기청정기 관련 메뉴를 실행하는 함수
 
 void timeReserve(List *rlist);		// 시간 예약을 위한 함수
-												// air, cook, laund, airclean 메뉴에서 모두 사용됨
+												// 모든 장치 메뉴에서 모두 사용됨

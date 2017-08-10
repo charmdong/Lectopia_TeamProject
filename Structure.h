@@ -55,19 +55,9 @@ typedef struct Device {
 	char deviceName[MAX_NAME];
 	char company[MAX_NAME];
 	char conductNum[MAX_COND];
+	char indate[10];
 	int reserCnt;
-	int indate[10];
 }Device;
-
-/*
-		전등 하나의 구조체
-		인덱스 0~8에 해당하는 위치
-		(1)거실 (2)방1 (3)방2 (4)방3 (5) 방4
-		(6)화장실1 (7)화장실2 (8)부엌 (9)현관
-		status : ON - 1, OFF - 0
-		reserCnt : 예약 횟수
-		rData : 예약 구조체 포인터
-*/
 
 typedef struct Node {
 	struct Node *prev, *next;
