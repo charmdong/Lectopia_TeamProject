@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "Structure.h"
 #include "StructureFunc.h"
 
@@ -77,6 +78,33 @@ void reservePrint(void *p)
 		else
 			printf("모드 : 고속\n");
 	}
+}
+
+int reserveNameCmp(void *p1, void *p2) //같으면 1
+{
+	Reserve *val1 = (Reserve *)p1, *val2 = (Reserve *)p2;
+
+	if (!strcmp(val1->deviceName, val2->deviceName))
+		return 1;
+	else
+		return 0;
+}
+
+int reserveTimeCmp(void *p1, void *p2)
+{
+	Reserve *val = (Reserve *)p1;
+	tm *cur = (tm *)p2;
+
+	if (val->hour < cur->tm_hour)
+		return 1;
+	else if (val->hour == cur->tm_hour) {
+		if (val->min > cur->tm_min)
+			return 1;
+		else if (val->min == cur->tm_min)
+			return 0;
+		return -1;
+	}
+	return -1;
 }
 //==============================================//
 void statusMemcpy(void *p1, void *p2)
