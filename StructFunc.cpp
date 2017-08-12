@@ -60,7 +60,7 @@ void reservePrint(void *p)
 	printf("장치명 = %s\n", val->deviceName);
 	printf("시 = %d\n", val->hour);
 	printf("분 = %d\n", val->min);
-	if (val->reStatus == -1)
+	if (val->reStatus == 1)
 		printf("ON 예약\n");
 	else
 		printf("OFF 예약\n");
@@ -137,8 +137,10 @@ void statusMemcpy(void *p1, void *p2)
 
 int statusNameCmp(void *p1, void *p2)
 {
-	Status *val1 = (Status *)p1, *val2 = (Status *)p2;
-	if (!strcmp(val1->deviceName, val2->deviceName))
+	Status *val1 = (Status *)p1;
+	char *device = (char*)p2;
+
+	if (!strcmp(val1->deviceName, device))
 		return 1;
 	return 0;
 }
