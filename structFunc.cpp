@@ -165,6 +165,14 @@ void environInit(void *p)
 	((Environ *)p)->nowTemper = ((Environ *)p)->clean = 0;
 }
 //===============================================//
+void infoPrint(void *p)
+{
+	Device *val = (Device *)p;
+	printf("제품명 : %s\n", val->deviceName);
+	printf("제조 정보 : %s\n", val->company);
+}
+
+//===============================================//
 int createList(List *lp)
 {
 	if (lp == NULL) 
@@ -263,30 +271,5 @@ int removeNode(List *lp, void *data, int(*dataCompare)(void *, void*))
 	return 1;
 }
 
-List *reserveRead(char *fileName)
-{
-	FILE *fp;
-	List rlist;
-	char realFile[FILENAME_MAX];
-	Reserve tmp;
-
-	createList(&rlist);
-	sprintf(realFile, "%s%s", "C:/Data", fileName);
-
-	fp = fopen(realFile, "rt");
-	if (fp == NULL)
-		return NULL;
-
-	while (!fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
-		tmp.deviceName[strlen(tmp.deviceName) - 1] = '\0';
-		fscanf(fp, "%d", &tmp.hour);
-		fscanf(fp, "%d", &tmp.min);
-		fscanf(fp, "%d", &tmp.reStatus);
-		fscanf(fp, "%d", &tmp.mode);
-		addLast(&rlist, &tmp, sizeof(Reserve), reserveMemcpy);
-	}
-
-	return &rlist;
-}
 
 //=============================================//
