@@ -9,12 +9,15 @@ rlist : Node가 Reserve 구조체로 구성되어, 각 장치들의 예약 정보를 갖는 List
 slist : Node가 Status 구조체로 구성되어, 각 장치들의 상태 정보를 갖는 List
 */
 
-void fileRead(char *fileName);	// fileName에 해당하는 파일의 정보를 해당하는 List에 저장 
-List deviceRead(char *fileName);
-List reserveRead(char *fileName);
-List statusRead(char *fileName);
-void fileWrite(List *, char *fileName);	// list의 정보를 해당 파일에 저장한다
+void fileRead(List *list, char *fileName);	// fileName에 해당하는 파일의 정보를 해당하는 List에 저장 
+void deviceRead(List *dlist, char *fileName);
+void reserveRead(List *rlist,char *fileName);
+void statusRead(List *slist,char *fileName);
+void environRead(List *elist,char *filName);
+void fileWrite(List *list, char *fileName);	// list의 정보를 해당 파일에 저장한다
 void mainMenu();	// Main 메뉴들을 출력.
+void gotoxy(int, int);
+void printMain(List *slist);
 
 void setMenu(List *list);				// 설정모드의 메뉴. 
 void enrollDevice(List *dlist);		// 장치를 등록하기 위한 함수

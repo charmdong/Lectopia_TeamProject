@@ -54,7 +54,6 @@ typedef struct Reserve {
 typedef struct Device {
 	char deviceName[MAX_NAME];
 	char company[MAX_NAME];
-	char conductNum[MAX_COND];
 	char indate[10];
 	int reserCnt;
 }Device;
