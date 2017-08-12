@@ -12,7 +12,6 @@ void deviceMemcpy(void *p1, void *p2)
 
 	strcpy(val1->deviceName, val2->deviceName);
 	strcpy(val1->company, val2->company);
-	strcpy(val1->conductNum, val2->conductNum);
 	strcpy(val1->indate, val2->indate);
 	val1->reserCnt = val2->reserCnt;
 }
@@ -21,8 +20,7 @@ void devicePrint(void *p)
 {
 	Device *val = (Device *)p;
 	printf("장치명 : %s\n", val->deviceName);
-	printf("제조 회사 : %s\n", val->company);
-	printf("제품 번호 : %s\n", val->conductNum);
+	printf("제조 정보 : %s\n", val->company);
 	printf("등록 일자 : %s\n", val->indate);
 }
 
@@ -32,6 +30,15 @@ int deviceNameCmp(void *p1, void *p2)
 	if (!strcmp(val1->deviceName, val2->deviceName))
 		return 1;
 	return 0;
+}
+
+void deviceInit(void *p)
+{
+	Device *val = (Device *)p;
+	strcpy(val->deviceName, "");
+	strcpy(val->company, "");
+	strcpy(val->indate, "");
+	val->reserCnt = 0;
 }
 
 //==============================================//
@@ -109,6 +116,14 @@ int reserveTimeCmp(void *p1, void *p2)
 	return -1;
 }
 
+void reserveInit(void *p)
+{
+	Reserve *val = (Reserve *)p;
+	strcpy(val->deviceName, "");
+	val->hour = val->min = val->reStatus = -1;
+	val->mode = 0;
+}
+
 //==============================================//
 void statusMemcpy(void *p1, void *p2)
 {
@@ -128,6 +143,14 @@ int statusNameCmp(void *p1, void *p2)
 	return 0;
 }
 
+void statusInit(void *p)
+{
+	Status *val = (Status *)p;
+	strcpy(val->deviceName, "");
+	val->status = -1;
+	val->mode = 0;
+	val->temper = 23;
+}
 //===============================================//
 void environMemcpy(void *p1, void *p2)
 {
@@ -137,6 +160,10 @@ void environMemcpy(void *p1, void *p2)
 	val1->clean = val2->clean;
 }
 
+void environInit(void *p)
+{
+	((Environ *)p)->nowTemper = ((Environ *)p)->clean = 0;
+}
 //===============================================//
 int createList(List *lp)
 {
@@ -261,3 +288,5 @@ List *reserveRead(char *fileName)
 
 	return &rlist;
 }
+
+//=============================================//
