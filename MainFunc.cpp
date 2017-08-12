@@ -6,6 +6,7 @@
 #include <conio.h>
 #include "Structure.h"
 #include "StructFunc.h"
+#include "MainFunc.h"
 #define AIRCOND 0
 #define AIRCLEANER 1
 #define COOK 2
@@ -14,10 +15,10 @@
 #define TEMPER 5
 #define ESC 27
 
-char *fileName[] = { "Device.txt", "Reserve.txt", "Status.txt", "Environ.txt", "Info.txt" };
-char *deviceName[] = { "AIRCOND", "AIRCLEANER", "COOK", "INDUCTION", "LAUND", "TEMPER" };
+const char *fileName[] = { "Device.txt", "Reserve.txt", "Status.txt", "Environ.txt", "Info.txt" };
+const char *deviceName[] = { "AIRCOND", "AIRCLEANER", "COOK", "INDUCTION", "LAUND", "TEMPER" };
 
-void fileRead(List *list, char *fileName)
+void fileRead(List *list,const char *fileName)
 {
 	if (!strcmp("Device.txt", fileName) || !strcmp("Info.txt", fileName))
 		deviceRead(list, fileName);
@@ -33,7 +34,7 @@ void fileRead(List *list, char *fileName)
 	}
 }
 
-void deviceRead(List *dlist, char *fileName)
+void deviceRead(List *dlist, const char *fileName)
 {
 	FILE *fp;
 	char realFile[FILENAME_MAX];
@@ -46,7 +47,7 @@ void deviceRead(List *dlist, char *fileName)
 	assert(fp != NULL);
 
 	if (!strcmp("Device.txt", fileName)) {
-		while (!fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
+		while (fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
 			tmp.deviceName[strlen(tmp.deviceName) - 1] = '\0';
 			fgets(tmp.company, sizeof(tmp.company), fp);
 			tmp.company[strlen(tmp.company) - 1] = '\0';
@@ -59,7 +60,7 @@ void deviceRead(List *dlist, char *fileName)
 	}
 	else {
 		deviceInit(&tmp);
-		while (!fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
+		while (fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
 			tmp.deviceName[strlen(tmp.deviceName) - 1] = '\0';
 			fgets(tmp.company, sizeof(tmp.company), fp);
 			tmp.company[strlen(tmp.company) - 1] = '\0';
@@ -68,19 +69,19 @@ void deviceRead(List *dlist, char *fileName)
 	}
 }
 
-void reserveRead(List *rlist, char *fileName)
+void reserveRead(List *rlist, const char *fileName)
 {
 	FILE *fp;
 	char realFile[FILENAME_MAX];
 	char nl;
 	Reserve tmp;
 
-	sprintf(realFile, "%s%s", "C:/Data", fileName);
+	sprintf(realFile, "%s%s", "C:/Data/", fileName);
 
 	fp = fopen(realFile, "rt");
 	if (fp == NULL) return;
 
-	while (!fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
+	while (fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
 		tmp.deviceName[strlen(tmp.deviceName) - 1] = '\0';
 		fscanf(fp, "%d", &tmp.hour);
 		fscanf(fp, "%d", &tmp.min);
@@ -91,19 +92,20 @@ void reserveRead(List *rlist, char *fileName)
 	}
 }
 
-void statusRead(List *slist, char *fileName)
+void statusRead(List *slist, const char *fileName)
 {
 	FILE *fp;
 	char realFile[FILENAME_MAX];
 	char nl;
 	Status tmp;
 
-	sprintf(realFile, "%s%s", "C:/Data", fileName);
+	sprintf(realFile, "%s%s", "C:/Data/", fileName);
 
 	fp = fopen(realFile, "rt");
 	if (fp == NULL) return;
 
-	while (!fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
+	while (fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
+		tmp.deviceName[strlen(tmp.deviceName) - 1] = '\0';
 		fscanf(fp, "%d", &tmp.status);
 		fscanf(fp, "%d", &tmp.mode);
 		fscanf(fp, "%d", &tmp.temper);
@@ -112,14 +114,14 @@ void statusRead(List *slist, char *fileName)
 	}
 }
 
-void environRead(List *elist, char *fileName)
+void environRead(List *elist, const char *fileName)
 {
 	FILE *fp;
 	char realFile[FILENAME_MAX];
 	char nl;
 	Environ tmp;
 
-	sprintf(realFile, "%s%s", "C:/Data", fileName);
+	sprintf(realFile, "%s%s", "C:/Data/", fileName);
 
 	fp = fopen(realFile, "rt");
 	if (fp == NULL) return;

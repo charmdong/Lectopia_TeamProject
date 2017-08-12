@@ -7,9 +7,7 @@
 #include <conio.h>
 #include "MainFunc.h"
 #include "StructFunc.h"
-
-char *fileName[] = { "Device.txt", "Reserve.txt", "Status.txt", "Environ.txt", "Info.txt" };
-char *deviceName[] = { "AIRCOND", "AIRCLEANER", "COOK", "INDUCTION", "LAUND", "TEMPER" };
+#include "MainFunc.h"
 
 int main()
 {
@@ -19,7 +17,7 @@ int main()
 	power(&test);
 	return 0;
 }
-
+/*
 void mainMenu()
 {
 	List list[5];
@@ -38,3 +36,4 @@ void mainMenu()
 	}
 }
 
+*/

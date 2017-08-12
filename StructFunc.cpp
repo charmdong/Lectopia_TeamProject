@@ -5,6 +5,7 @@
 #include <assert.h>
 #include "Structure.h"
 #include "StructFunc.h"
+#include "MainFunc.h"
 
 void deviceMemcpy(void *p1, void *p2)
 {
