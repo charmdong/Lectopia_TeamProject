@@ -139,7 +139,7 @@ int statusNameCmp(void *p1, void *p2)
 {
 	Status *val1 = (Status *)p1;
 	char *device = (char*)p2;
-
+	//printf("<%s>\n", device);
 	if (!strcmp(val1->deviceName, device))
 		return 1;
 	return 0;
@@ -166,6 +166,11 @@ void environInit(void *p)
 {
 	((Environ *)p)->nowTemper = ((Environ *)p)->clean = 0;
 }
+/*
+void environPrint(void *p)
+{
+	printf("%d\n%d\n", ((Environ *)p)->nowTemper, ((Environ *)p)->clean);
+}*/
 //===============================================//
 int createList(List *lp)
 {
@@ -191,14 +196,18 @@ void destroyList(List *lp)
 	Node *cur, *nextp;
 	cur = lp->head->next;
 
+	if (lp == NULL)
+		return;
+
 	while (cur != lp->tail) {
-		nextp = cur;
+		nextp = cur->next;
 		free(cur);
-		cur = nextp->next;
+		cur = nextp;
 	}
 
 	free(lp->head);
 	free(lp->tail);
+	lp->head = lp->tail = NULL;
 }
 
 int addLast(List *lp, void *data, size_t size, void(*memcpy)(void *, void*))

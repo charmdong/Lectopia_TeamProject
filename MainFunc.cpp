@@ -28,7 +28,7 @@ void mainMenu()
 		createList(&list[i]);
 		fileRead(&list[i], fileName[i]);
 	}	// list[0] : dlist, list[1] : rlist,  list[2] : slist, list[3] : elist, list[4] : infolist
-
+	
 	while (1) {
 		if (kbhit()) {
 			choice = getch();
@@ -44,7 +44,9 @@ void mainMenu()
 		printMain(&list[2]);
 	}
 
-	for (i = 0; i < sizeof(list) / sizeof(list[0]); i++)
+
+
+	for (i = 0; i < sizeof(list) / sizeof(list[0]); i++) 
 		destroyList(&list[i]);
 }
 
@@ -96,6 +98,8 @@ void deviceRead(List *dlist, const char *fileName)
 			addLast(dlist, &tmp, sizeof(Device), deviceMemcpy);
 		}
 	}
+
+	fclose(fp);
 }
 
 void reserveRead(List *rlist, const char *fileName)
@@ -118,6 +122,8 @@ void reserveRead(List *rlist, const char *fileName)
 		fscanf(fp, "%d ", &tmp.mode);
 		addLast(rlist, &tmp, sizeof(Reserve), reserveMemcpy);
 	}
+
+	fclose(fp);
 }
 
 void statusRead(List *slist, const char *fileName)
@@ -139,6 +145,8 @@ void statusRead(List *slist, const char *fileName)
 		fscanf(fp, "%d ", &tmp.temper);
 		addLast(slist, &tmp, sizeof(Status), statusMemcpy);
 	}
+
+	fclose(fp);
 }
 
 void environRead(List *elist, const char *fileName)
@@ -155,9 +163,11 @@ void environRead(List *elist, const char *fileName)
 
 	while (!feof(fp)) {
 		fscanf(fp, "%d", &tmp.nowTemper);
-		fscanf(fp, "%d", &tmp.clean);
+		fscanf(fp, "%d ", &tmp.clean);
 		addLast(elist, &tmp, sizeof(Environ), environMemcpy);
 	}
+
+	fclose(fp);
 }
 
 void power(List *slist)
@@ -221,61 +231,47 @@ void powerCheck(List *slist, int index)
 
 void printMain(List *slist)
 {
-	Node *cur;
-	Status tmp;
-	Status tmp2;
+	Node *cur , *cur2;
 	char st[10] = { " " };
 	char st2[10] = { " " };
-	statusInit(&tmp);
-	statusInit(&tmp2);
 	int i = 0;
 	int j = 0;
 	gotoxy(3, 5);
 	printf("+--------------------------------------------------------------------------------------------------------+");
-	for (i = 0; i<6; i++)
+	for (i = 0; i<5; i++)
 	{
-
-		strcpy(tmp.deviceName, deviceName[i]);
-		strcpy(tmp2.deviceName, deviceName[i + 1]);
 		cur = slist->head->next;
 		while (cur != slist->tail) {
-			if (statusNameCmp(cur + 1, &tmp))
-			{
-				statusMemcpy(&tmp, cur + 1);
-				if (tmp.status == 1)
-				{
+			if (statusNameCmp(cur + 1, deviceName[i])){
+				if (((Status*)(cur+1))->status == 1)
 					strcpy(st, "    ●");
-				}
 				else
-				{
 					strcpy(st, "    ○");
-				}
+				break;
 			}
 			cur = cur->next;
 		}
 		if (!strcmp(st, ""))
 			strcpy(st, "미등록");
 
-		cur = slist->head->next;
-		while (cur != slist->tail)
-		{
-			if (statusNameCmp(cur + 1, &tmp2))
-			{
-				statusMemcpy(&tmp2, cur + 1);
-				if (tmp2.status == 1)
+		cur2 = slist->head->next;
+		while (cur2 != slist->tail){
+			if (statusNameCmp(cur2 + 1, deviceName[i+1])){
+				if (((Status*)(cur2 + 1))->status == 1)
 					strcpy(st2, "    ●");
 				else
 					strcpy(st2, "    ○");
+				break;
 			}
-			cur = cur->next;
+			cur2 = cur2->next;
 		}
 		if (!strcmp(st2, ""))
 			strcpy(st2, "미등록");
-
+		
 		gotoxy(3, 6 + (5 * j));
-		printf("| %c.%s", 'A' + i, tmp.deviceName);
+		printf("| %c.%s", 'A' + i, deviceName[i]);
 		gotoxy(49, 6 + (5 * j));
-		printf("%s | %c.%s", st, 'A' + i + 1, tmp2.deviceName);
+		printf("%s | %c.%s", st, 'A' + i + 1, deviceName[i+1]);
 		gotoxy(101, 6 + (5 * j));
 		printf("%s | ", st2);
 		gotoxy(3, 7 + (5 * j));
@@ -286,10 +282,10 @@ void printMain(List *slist)
 		printf("|                                                    |                                                   |");
 		gotoxy(3, 10 + (5 * j));
 		printf("+--------------------------------------------------------------------------------------------------------+");
-		i = i + 1;
+		i++;
 		strcpy(st, "");
 		strcpy(st2, "");
-		j = j + 1;
+		j++;
 	}
 	printf("\n 장치설정은 해당 장치의 알파벳을 / ON/OFF기능을 원하시면 알파벳 'O'를 / ESC키를 누르시면 프로그램이 종료 됩니다.  ");
 }

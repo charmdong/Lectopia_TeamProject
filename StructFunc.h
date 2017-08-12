@@ -26,6 +26,7 @@ void statusInit(void*p);
 
 void environMemcpy(void *p1, void *p2);
 void environInit(void *p);
+//void environPrint(void *p);
 
 int createList(List *lp);					/* 연결 리스트 초기화 */
 void destroyList(List *lp);
