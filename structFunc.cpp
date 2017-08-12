@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
+#include <assert.h>
 #include "Structure.h"
 #include "StructureFunc.h"
 
@@ -133,4 +135,129 @@ void environMemcpy(void *p1, void *p2)
 
 	val1->nowTemper = val2->nowTemper;
 	val1->clean = val2->clean;
+}
+
+//===============================================//
+int createList(List *lp)
+{
+	if (lp == NULL) 
+		return 0;
+	lp->head = (Node*)malloc(sizeof(Node));
+	if (lp->head == NULL) 
+		return 0;
+	
+	lp->tail = (Node*)malloc(sizeof(Node));
+	if (lp->tail == NULL) 
+		return 0;
+
+	lp->head->next = lp->tail;
+	lp->tail->prev = lp->head;
+	lp->head->prev = lp->head;
+	lp->tail->next = lp->tail;
+	return 1;
+}
+
+void destroyList(List *lp)
+{
+	Node *cur, *nextp;
+	cur = lp->head->next;
+	
+	while (cur != lp->tail) {
+		nextp = cur;
+		free(cur);
+		cur = nextp->next;
+	}
+
+	free(lp->head);
+	free(lp->tail);
+}
+
+int addLast(List *lp, void *data, size_t size, void(*memcpy)(void *, void*))
+{
+	Node *np;
+	
+	if (lp == NULL) return 0;
+	
+	np = (Node*)malloc(sizeof(Node) + size);
+	if (np == NULL) return 0;
+
+	memcpy(np + 1, data);
+	np->next = lp->tail;
+	lp->tail->prev->next = np;
+	np->prev = lp->tail->prev;
+	lp->tail->prev = np;
+	
+	return 1;
+}
+
+void displayList(List *lp, void(*dataPrint)(void *))
+{
+	Node *cur;
+	
+	if (lp == NULL) return;
+
+	cur = lp->head->next;
+
+	while (cur != lp->tail) {
+		dataPrint(cur + 1);
+		cur = cur->next;
+	}
+	//printf("\n");
+}
+
+Node *searchNode(List *lp, void *data, int(*dataCompare)(void *, void*))
+{
+	Node *cur;
+
+	if (lp == NULL) return NULL;
+
+	cur = lp->head->next;
+
+	while (cur != lp->tail) {
+		if (dataCompare(cur + 1, data))
+			return cur;
+		cur = cur->next;
+	}
+	return NULL;
+}
+
+int removeNode(List *lp, void *data, int(*dataCompare)(void *, void*))
+{
+	Node *delp;
+
+	if (lp == NULL) return 0;
+
+	delp = searchNode(lp, data, dataCompare);
+	if (delp == NULL) return 0;
+
+	delp->prev->next = delp->next;
+	delp->next->prev = delp->prev;
+	free(delp);
+	return 1;
+}
+
+List *reserveRead(char *fileName)
+{
+	FILE *fp;
+	List rlist;
+	char realFile[FILENAME_MAX];
+	Reserve tmp;
+
+	createList(&rlist);
+	sprintf(realFile, "%s%s", "C:/Data", fileName);
+
+	fp = fopen(realFile, "rt");
+	if (fp == NULL)
+		return NULL;
+
+	while (!fgets(tmp.deviceName, sizeof(tmp.deviceName), fp)) {
+		tmp.deviceName[strlen(tmp.deviceName) - 1] = '\0';
+		fscanf(fp, "%d", &tmp.hour);
+		fscanf(fp, "%d", &tmp.min);
+		fscanf(fp, "%d", &tmp.reStatus);
+		fscanf(fp, "%d", &tmp.mode);
+		addLast(&rlist, &tmp, sizeof(Reserve), reserveMemcpy);
+	}
+
+	return &rlist;
 }

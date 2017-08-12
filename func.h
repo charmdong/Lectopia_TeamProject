@@ -9,7 +9,11 @@ rlist : Node가 Reserve 구조체로 구성되어, 각 장치들의 예약 정보를 갖는 List
 slist : Node가 Status 구조체로 구성되어, 각 장치들의 상태 정보를 갖는 List
 */
 
-void fileRead(List *, char *fileName);	// fileName에 해당하는 파일의 정보를 해당하는 List에 저장 
+void fileRead(char *fileName);	// fileName에 해당하는 파일의 정보를 해당하는 List에 저장 
+List deviceRead(char *fileName);
+List reserveRead(char *fileName);
+List statusRead(char *fileName);
+void fileWrite(List *, char *fileName);	// list의 정보를 해당 파일에 저장한다
 void mainMenu();	// Main 메뉴들을 출력.
 
 void setMenu(List *list);				// 설정모드의 메뉴. 
