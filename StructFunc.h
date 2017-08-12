@@ -27,8 +27,6 @@ void statusInit(void*p);
 void environMemcpy(void *p1, void *p2);
 void environInit(void *p);
 
-void infoPrint(void *p);
-
 int createList(List *lp);					/* 연결 리스트 초기화 */
 void destroyList(List *lp);
 int addLast(List *lp, void *data, size_t size, void(*memcpy)(void *, void *));			/* tail node 앞에 node 추가(정순 저장) */

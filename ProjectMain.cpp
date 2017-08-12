@@ -5,8 +5,8 @@
 #include <string.h>
 #include <windows.h>
 #include <conio.h>
-#include "func.h"
-#include "StructureFunc.h"
+#include "MainFunc.h"
+#include "StructFunc.h"
 
 char *fileName[] = { "Device.txt", "Reserve.txt", "Status.txt", "Environ.txt", "Info.txt" };
 char *deviceName[] = { "AIRCOND", "AIRCLEANER", "COOK", "INDUCTION", "LAUND", "TEMPER" };
