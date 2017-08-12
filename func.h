@@ -9,12 +9,12 @@ rlist : Node가 Reserve 구조체로 구성되어, 각 장치들의 예약 정보를 갖는 List
 slist : Node가 Status 구조체로 구성되어, 각 장치들의 상태 정보를 갖는 List
 */
 
-void fileRead(List *list, char *fileName);	// fileName에 해당하는 파일의 정보를 해당하는 List에 저장 
-void deviceRead(List *dlist, char *fileName);
-void reserveRead(List *rlist,char *fileName);
-void statusRead(List *slist,char *fileName);
-void environRead(List *elist,char *filName);
-void fileWrite(List *list, char *fileName);	// list의 정보를 해당 파일에 저장한다
+void fileRead(List *list, const char *fileName);	// fileName에 해당하는 파일의 정보를 해당하는 List에 저장 
+void deviceRead(List *dlist, const char *fileName);
+void reserveRead(List *rlist,const char *fileName);
+void statusRead(List *slist,const char *fileName);
+void environRead(List *elist,const char *filName);
+void fileWrite(List *list, const char *fileName);	// list의 정보를 해당 파일에 저장한다
 void mainMenu();	// Main 메뉴들을 출력.
 void gotoxy(int, int);
 void printMain(List *slist);
@@ -28,6 +28,8 @@ void resetAll(List *list);				// 모든 장치, 예약, 상태의 정보를 삭제하는 함수
 
 void power(List *slist);				// cookmenu 2번, 메인메뉴함수에서 'O' 입력 시 호출
 												// 장치들의 ON, OFF를 제어하는 함수
+void powerCheck(List *slist, Status *s, int index);
+
 void printStatus(List *slist);			// 현재 장치들의 상태를 출력해주는 함수
 
 void airMenu(List *list);				// 에어컨 메뉴를 실행하는 함수

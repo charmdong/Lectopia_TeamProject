@@ -151,6 +151,8 @@ void statusInit(void *p)
 	val->mode = 0;
 	val->temper = 23;
 }
+
+
 //===============================================//
 void environMemcpy(void *p1, void *p2)
 {
