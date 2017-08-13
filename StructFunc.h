@@ -1,6 +1,7 @@
 #pragma once
 #include "Structure.h"
 
+
 void deviceMemcpy(void *p1, void *p2);
 void devicePrint(void *p);
 int deviceNameCmp(void *p1, void *p2);
@@ -8,6 +9,7 @@ void deviceInit(void *p);
 
 void reserveMemcpy(void *p1, void *p2);
 void reservePrint(void *p);
+int reserveCmp(void *p1, void *p2);
 int reserveNameCmp(void *p1, void *p2);
 int reserveTimeCmp(void *p1, void *p2);
 /*

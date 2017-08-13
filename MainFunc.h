@@ -45,9 +45,13 @@ int waterTemp();						// 수온 희망 온도 값 반환해주는 함수
 void cookMenu(List *list);			// 밥솥 관련 메뉴를 실행하는 함수
 
 void laundMenu(List *list);			// 세탁기 관련 메뉴를 실행하는 함수
-int Mode();	// 희망 세탁기 및 공기청정기 모드 번호 반환하는 함수
-					// 세탁기의 경우 1~3번 중 하나, 공기청정기의 경우 1 or 2 중 하나 반환
+int Mode(char *deviceName);	// 희망 세탁기 및 공기청정기 모드 번호 반환하는 함수
+					// 에어컨의 경우 1~4번 중 하나, 세탁기의 경우 1~3번 중 하나, 공기청정기의 경우 1 or 2 중 하나 반환
 void aircleanMenu(List *list);		// 공기청정기 관련 메뉴를 실행하는 함수
 
 void timeReserve(List *rlist);		// 시간 예약을 위한 함수
 												// 모든 장치 메뉴에서 모두 사용됨
+
+
+void executeReserve(List *rlist, List *slist);
+void reserveCheck(List *rlist, List *check);

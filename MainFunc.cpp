@@ -12,7 +12,7 @@
 #define AIRCLEANER 1
 #define COOK 2
 #define INDUCTION 3
-#define LAUND 4
+#define LAUNDRY 4
 #define TEMPER 5
 #define ESC 27
 
@@ -28,7 +28,7 @@ void mainMenu()
 		createList(&list[i]);
 		fileRead(&list[i], fileName[i]);
 	}	// list[0] : dlist, list[1] : rlist,  list[2] : slist, list[3] : elist, list[4] : infolist
-	
+	/*
 	while (1) {
 		if (kbhit()) {
 			choice = getch();
@@ -38,12 +38,17 @@ void mainMenu()
 				break;
 			
 			switch (choice) {
-			case 'O': power(&list[2]);
+			case 'O': 
+				system("cls");
+				printf("\n\n\t\t\t\t# ON / OFF 할 장치에 해당하는 번호를 눌러주세요 #\n");
+				power(&list[2]);
+				break;
 			}
 		}
 		printMain(&list[2]);
 	}
-
+	*/
+	executeReserve(&list[1], &list[2]);
 	for (i = 0; i < 3; i++)
 		fileWrite(&list[i], fileName[i]);
 	for (i = 0; i < sizeof(list) / sizeof(list[0]); i++) 
@@ -196,6 +201,12 @@ void deviceWrite(List *dlist, const char *fileName)
 	fp = fopen(realFile, "w");
 	assert(fp != NULL);
 
+	if (dlist->head->next == dlist->tail) {
+		fprintf(fp, "");
+		fclose(fp);
+		return;
+	}
+
 	cur = dlist->head->next;
 	while (cur != dlist->tail) {
 		tmp = (Device *)(cur + 1);
@@ -217,6 +228,12 @@ void reserveWrite(List *rlist, const char *fileName)
 	fp = fopen(realFile, "w");
 	assert(fp != NULL);
 
+	if (rlist->head->next == rlist->tail) {
+		fprintf(fp, "");
+		fclose(fp);
+		return;
+	}
+
 	cur = rlist->head->next;
 	while (cur != rlist->tail) {
 		tmp = (Reserve *)(cur + 1);
@@ -237,6 +254,12 @@ void statusWrite(List *slist, const char *fileName)
 
 	fp = fopen(realFile, "w");
 	assert(fp != NULL);
+
+	if (slist->head->next == slist->tail) {
+		fprintf(fp, "");
+		fclose(fp);
+		return;
+	}
 
 	cur = slist->head->next;
 	while (cur != slist->tail) {
@@ -273,7 +296,7 @@ void power(List *slist)
 				powerCheck(slist, INDUCTION);
 				break;
 			case 'E':
-				powerCheck(slist, LAUND);
+				powerCheck(slist, LAUNDRY);
 				break;
 			case 'F':
 				powerCheck(slist, TEMPER);
@@ -290,7 +313,7 @@ void powerCheck(List *slist, int index)
 	Status *s;
 
 	if ((cur = searchNode(slist, deviceName[index], statusNameCmp)) == NULL) {
-		printf("등록되지 않은 장치입니다 !\n");
+		printf("\n\n\t\t\t\t\t    등록되지 않은 장치입니다\n");
 		return;
 	}
 	
@@ -371,4 +394,70 @@ void gotoxy(int x, int y)
 {
 	COORD Pos = { x, y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
+}
+
+int Mode(char *device)
+{
+	int mode;
+	if (!strcmp(device, deviceName[AIRCOND])) {
+		printf("Select Mode >> ");
+		while (1) {
+			scanf("%d", &mode);
+			if (mode >= 1 && mode <= 4)
+				return mode;
+		}
+	}
+	else if(!strcmp(device, deviceName[AIRCLEANER])){
+		printf("Select Mode >> ");
+		while (1) {
+			scanf("%d", &mode);
+			if (mode >= 1 && mode <= 3)
+				return mode;
+		}
+	}
+	else {
+		printf("Select Mode >> ");
+		while (1) {
+			scanf("%d", &mode);
+			if (mode == 1 || mode == 2)
+				return mode;
+		}
+	}
+}
+
+void executeReserve(List *rlist, List *slist)
+{
+	Node *rescur, *cur;
+	List *check;
+	check = (List *)calloc(1, sizeof(List));
+	createList(check);
+
+	reserveCheck(rlist, check);
+	
+	cur = check->head->next;
+	while (cur != check->tail) {
+		removeNode(rlist, cur + 1, reserveCmp);
+		cur = cur->next;
+	}
+
+	reserveWrite(rlist, "Reserve.txt");
+	destroyList(check);
+	free(check);
+}
+
+void reserveCheck(List *rlist, List *check)
+{
+	Node *cur;
+	Reserve res;
+	time_t tmp;
+	tm *nowTime;
+	tmp = time(NULL);
+	nowTime = localtime(&tmp);
+
+	cur = rlist->head->next;
+	while (cur != rlist->tail) {
+		if (reserveTimeCmp(cur + 1, nowTime) != 1) 
+			addLast(check, cur+1, sizeof(Reserve), reserveMemcpy);
+		cur = cur->next;
+	}
 }

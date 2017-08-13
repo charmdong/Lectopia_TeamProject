@@ -90,6 +90,16 @@ void reservePrint(void *p)
 	}
 }
 
+int reserveCmp(void *p1, void *p2)
+{
+	Reserve *val1 = (Reserve *)p1, *val2 = (Reserve *)p2;
+
+	if (val1 == val2)
+		return 1;
+	else
+		return 0;
+}
+
 int reserveNameCmp(void *p1, void *p2) //°°À¸¸é 1
 {
 	Reserve *val1 = (Reserve *)p1, *val2 = (Reserve *)p2;
