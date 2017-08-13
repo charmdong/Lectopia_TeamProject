@@ -427,7 +427,7 @@ int Mode(char *device)
 
 void executeReserve(List *rlist, List *slist)
 {
-	Node *rescur, *cur;
+	Node *cur, *scur;
 	List *check;
 	check = (List *)calloc(1, sizeof(List));
 	createList(check);
@@ -437,9 +437,11 @@ void executeReserve(List *rlist, List *slist)
 	cur = check->head->next;
 	while (cur != check->tail) {
 		removeNode(rlist, cur + 1, reserveCmp);
+		scur = searchNode(slist, ((Reserve *)(cur + 1))->deviceName, statusNameCmp);
+		changeStatus(slist, ((Status*)(scur + 1)), ((Reserve *)(cur + 1)));
 		cur = cur->next;
 	}
-
+	
 	reserveWrite(rlist, "Reserve.txt");
 	destroyList(check);
 	free(check);
@@ -459,5 +461,16 @@ void reserveCheck(List *rlist, List *check)
 		if (reserveTimeCmp(cur + 1, nowTime) != 1) 
 			addLast(check, cur+1, sizeof(Reserve), reserveMemcpy);
 		cur = cur->next;
+	}
+}
+
+void changeStatus(List *slist, Status *scur, Reserve *rcur)
+{
+	scur->status = rcur->reStatus;
+
+	if (!strcmp(rcur->deviceName, deviceName[AIRCOND]) 
+		|| !strcmp(rcur->deviceName, deviceName[AIRCLEANER])
+		|| !strcmp(rcur->deviceName, deviceName[LAUNDRY])) {
+		scur->mode = rcur->mode;
 	}
 }

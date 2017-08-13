@@ -55,3 +55,4 @@ void timeReserve(List *rlist);		// 시간 예약을 위한 함수
 
 void executeReserve(List *rlist, List *slist);
 void reserveCheck(List *rlist, List *check);
+void changeStatus(List *slist, Status *scur, Reserve *rcur);
