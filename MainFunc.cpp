@@ -8,6 +8,11 @@
 #include "Structure.h"
 #include "StructFunc.h"
 #include "MainFunc.h"
+#define DEVICE 0
+#define RESERVE 1
+#define STATUS 2
+#define ENVIRON 3
+#define INFO 4
 #define AIRCOND 0
 #define AIRCLEANER 1
 #define COOK 2
@@ -30,7 +35,7 @@ char *deviceName[] = { "AIRCOND", "AIRCLEANER", "COOK", "INDUCTION", "LAUNDRY", 
 void mainMenu()
 {
 	List list[5];
-	int i, choice;
+	int i, choice, check=0;
 	
 	for (i = 0; i < sizeof(list) / sizeof(list[0]); i++) {
 		createList(&list[i]);
@@ -38,6 +43,7 @@ void mainMenu()
 	}	// list[0] : dlist, list[1] : rlist,  list[2] : slist, list[3] : elist, list[4] : infolist
 	
 	while (1) {
+		check = checkChange(&list[STATUS]);
 		if (kbhit()) {
 			choice = getch();
 			if (choice >= 97 && choice <= 122)
@@ -49,28 +55,32 @@ void mainMenu()
 			case 'O': 
 				system("cls");
 				printf("\n\n\t\t\t\t# ON / OFF 할 장치에 해당하는 번호를 눌러주세요 #\n");
-				power(&list[2]);
+				printf("\t\t\t\t\t# ESC : 상위 메뉴로 돌아가기 #\n");
+				power(&list[STATUS]);
 				system("cls");
 				break;
+			case 'A': break;
+			case 'B': break;
 			case 'C': 
 				system("cls");
-				cookMenu(&list[2], &list[1]);
+				cookMenu(&list[STATUS], &list[RESERVE]);
 				system("cls");
 				break;
 			case 'E': 
 				system("cls");
-				laundMenu(&list[2], &list[1]);
+				laundMenu(&list[STATUS], &list[RESERVE]);
 				system("cls");
 				break;
 			case 'F':
 				system("cls");
-				temperMenu(&list[2]);
+				temperMenu(&list[STATUS]);
 				system("cls");
 				break;
 			}
 		}
-		executeReserve(&list[1], &list[2]);
-		printMain(&list[2]);
+		executeReserve(&list[RESERVE], &list[STATUS]);
+		if (check != checkChange(&list[STATUS]));
+			printMain(&list[STATUS]);
 		printf("\n 장치설정은 해당 장치의 알파벳을 / ON/OFF기능을 원하시면 알파벳 'O'를 / ESC키를 누르시면 프로그램이 종료 됩니다.  ");
 	}
 	
@@ -420,35 +430,7 @@ void gotoxy(int x, int y)
 	COORD Pos = { x, y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
-/*
-int Mode(char *device)
-{
-	int mode;
-	if (!strcmp(device, deviceName[AIRCOND])) {
-		printf("Select Mode >> ");
-		while (1) {
-			scanf("%d", &mode);
-			if (mode >= 1 && mode <= 4)
-				return mode;
-		}
-	}
-	else if(!strcmp(device, deviceName[AIRCLEANER])){
-		printf("Select Mode >> ");
-		while (1) {
-			scanf("%d", &mode);
-			if (mode >= 1 && mode <= 3)
-				return mode;
-		}
-	}
-	else {
-		printf("Select Mode >> ");
-		while (1) {
-			scanf("%d", &mode);
-			if (mode == 1 || mode == 2)
-				return mode;
-		}
-	}
-}*/
+
 int Mode(char *device)
 {
 	system("cls");
@@ -481,6 +463,7 @@ int Mode(char *device)
 		}
 	}
 }
+
 void executeReserve(List *rlist, List *slist)
 {
 	Node *cur, *scur;
@@ -533,6 +516,19 @@ void changeStatus(List *slist, Status *scur, Reserve *rcur)
 		|| !strcmp(rcur->deviceName, deviceName[LAUNDRY])) {
 		scur->mode = rcur->mode;
 	}
+}
+
+int checkChange(List *slist)
+{
+	Node *cur;
+	int total = 0;
+
+	cur = slist->head->next;
+	while (cur != slist->tail) {
+		total += ((Status *)(cur + 1))->status;
+		cur = cur->next;
+	}
+	return total;
 }
 
 //========================================//
@@ -727,7 +723,7 @@ void timeReserve(List *rlist, char *device)
 	else {
 		gotoxy(12, 13);
 		printf("+ %d시 %d분에 예약이 완료되었습니다 +\n", tmp.hour, tmp.min);
-		Sleep(700);
+		Sleep(1000);
 		system("cls");
 	}
 	strcpy(tmp.deviceName, device);
@@ -823,44 +819,6 @@ void setAircCondMode()
 	return;
 }
 
-void setLaund()
-{
-	int error = -1;
-	char mode;
-	char c = menu(setLaundList, sizeof(setLaundList) / sizeof(setLaundList[0]));
-	system("cls");
-	if (c == '1')
-		setTime();
-	else if (c == '2') {
-		mode = menu(setLaundModeList, sizeof(setLaundModeList) / sizeof(setLaundModeList[0]));
-		while (1) {
-			if (mode != '1' && mode != '2' && mode != '3') {
-				gotoxy(20, 8);
-				printf("                                      ");
-				gotoxy(2, 10);
-				printf("### 올바른 값을 입력하시오.(1 ~ 3) ###\n");
-				gotoxy(43, 10);
-				if (scanf("%d", &error) != 1 && error != 1 && error != 2 && error != 3)
-					myflush();
-				else if (error == 1 || error == 2 || error == 3)
-					break;
-				gotoxy(43, 10);
-				printf("                                  ");
-			}
-			else break;
-		}
-		system("cls");
-		gotoxy(10, 5);
-		if (mode == '1' || error == 1)
-			printf("+ 기본모드로 시작됩니다. +\n\n\n");
-		else if (mode == '2' || error == 2)
-			printf("+ 쾌속모드로 시작됩니다. +\n\n\n");
-		else if (mode == '3' || error == 3)
-			printf("+ 헹굼 및 탈수가 시작됩니다. +\n\n\n");
-
-		return;
-	}
-}
 void setAirCleaner()
 {
 	int error = -1;
@@ -898,4 +856,114 @@ void setAirCleaner()
 
 		return;
 	}
+}*/
+
+
+/*
+void airMenu(List *slist)
+{
+	char n;
+	Node *cur;
+	//   Reserve temp;
+	List *rp = &slist[RESERVE];
+	List *sp = &slist[STATUS];
+	//   statusInit(&temp);
+	//   reserveInit(&temp);
+	//   strcpy(temp.deviceName, deviceName[AIRCOND]);
+	cur = sp->head->next;
+	while (cur != slist->tail) {
+		if (statusNameCmp(cur + 1, deviceName[0]) == 1)
+			break;
+		else if (cur->next == sp->tail) {
+			printf("장치가 등록되어 있지 않습니다. 메인 메뉴로 돌아갑니다.\n");
+			getch();
+			return;
+		}
+		cur = cur->next;
+	}
+returnPoint:
+	n = menu(setAirCondList, sizeof(setAirCondList) / sizeof(setAirCondList[0]));
+	if (n == '1') {
+		timeReserve(rp, deviceName[0]);
+	}
+	else if (n == '2') {
+		airTemp(sp);
+	}
+	else if (n == '3') {
+		Mode("AIRCOND");
+	}
+	else
+		goto returnPoint;
+
+}
+
+void timeReserve(List *rp, char * tp)
+{
+	int hour, min;
+	int i;
+	Reserve temp;
+	strcpy(temp.deviceName, tp);
+	system("cls");
+	gotoxy(12, 3);
+	printf("------------<시간 예약>-------------");
+	gotoxy(12, 4);
+	printf(": 예약할 시간을 입력해주세요 (24h) :");
+	gotoxy(12, 5);
+	printf("------------------------------------");
+
+
+	while (1) {
+		gotoxy(12, 8);
+		printf("** 시 >> ");
+		if (scanf("%d", &hour) != 1 || hour < 0 || hour>24) {
+			gotoxy(12, 10);
+			printf("+ 해당 시간에 예약이 불가합니다 +\n");
+			myflush();
+
+		}
+		else
+			break;
+		Sleep(700);
+		gotoxy(20, 8);
+		printf("                                            ");
+		gotoxy(12, 10);
+		printf("                                            ");
+	}
+	while (1) {
+		gotoxy(12, 9);
+		printf("** 분 >> ");
+		if (scanf("%d", &min) != 1 || min < 0 || min>60) {
+			gotoxy(12, 10);
+			printf("+ 해당 시간에 예약이 불가합니다 +");
+			myflush();
+		}
+		else break;
+		Sleep(700);
+		gotoxy(20, 9);
+		printf("                                            ");
+		gotoxy(12, 10);
+		printf("                                            ");
+	}
+	gotoxy(12, 12);
+
+	temp.hour = hour;
+	temp.min = min;
+	printf("%s를(을) ON으로 예약하시려면 1, OFF로 예약하시려면 0를 눌러주세요.", temp.deviceName);
+	char resch;
+returnscan:
+	resch = kbhitMenu();
+	printf("%c", resch);
+	if (resch == '1' || resch == '0')
+		temp.reStatus = resch - '0';
+	else
+		goto returnscan;
+
+	for (i = 0; i < 6; i++){
+		if (strcmp(temp.deviceName, deviceName[i]) == 0){
+			if (i == 0 || i == 1 || i == 5)
+				temp.mode = Mode(deviceName[i]);
+		}
+	}
+	addLast(rp, &temp, sizeof(Reserve), reserveMemcpy);
+	return;
 }*/

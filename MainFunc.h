@@ -34,7 +34,7 @@ void power(List *slist);				// cookmenu 2번, 메인메뉴함수에서 'O' 입력 시 호출
 												// 장치들의 ON, OFF를 제어하는 함수
 void powerCheck(List *slist, int index);
 
-void printStatus(List *slist);			// 현재 장치들의 상태를 출력해주는 함수
+//void printStatus(List *slist);			// 현재 장치들의 상태를 출력해주는 함수
 
 void airMenu(List *list);				// 에어컨 메뉴를 실행하는 함수
 int airTemp();							// 에어컨 희망 온도 값 리턴
@@ -57,6 +57,7 @@ void timeReserve(List *rlist, char* device);		// 시간 예약을 위한 함수
 void executeReserve(List *rlist, List *slist);
 void reserveCheck(List *rlist, List *check);
 void changeStatus(List *slist, Status *scur, Reserve *rcur);
+int checkChange(List *slist);
 
 char kbhitMenu();
 int menu(const char **mList, size_t menuCnt);
