@@ -44,8 +44,8 @@ void mainMenu()
 		printMain(&list[2]);
 	}
 
-
-
+	for (i = 0; i < 3; i++)
+		fileWrite(&list[i], fileName[i]);
 	for (i = 0; i < sizeof(list) / sizeof(list[0]); i++) 
 		destroyList(&list[i]);
 }
@@ -167,6 +167,83 @@ void environRead(List *elist, const char *fileName)
 		addLast(elist, &tmp, sizeof(Environ), environMemcpy);
 	}
 
+	fclose(fp);
+}
+
+void fileWrite(List *list, const char *fileName)
+{
+	if (!strcmp("Device.txt", fileName))
+		deviceWrite(list, fileName);
+	else if (!strcmp("Reserve.txt", fileName))
+		reserveWrite(list, fileName);
+	else if (!strcmp("Status.txt", fileName))
+		statusWrite(list, fileName);
+	else {
+		printf("Cannot find the File !\n");
+		return;
+	}
+}
+
+void deviceWrite(List *dlist, const char *fileName)
+{
+	FILE *fp;
+	char realFile[FILENAME_MAX];
+	Node *cur;
+	Device *tmp;
+
+	sprintf(realFile, "%s%s", "C:/Data/", fileName);
+
+	fp = fopen(realFile, "w");
+	assert(fp != NULL);
+
+	cur = dlist->head->next;
+	while (cur != dlist->tail) {
+		tmp = (Device *)(cur + 1);
+		fprintf(fp, "%s\n%s\n%s\n%d\n", tmp->deviceName, tmp->company, tmp->indate, tmp->reserCnt);
+		cur = cur->next;
+	}
+	fclose(fp);
+}
+
+void reserveWrite(List *rlist, const char *fileName)
+{
+	FILE *fp;
+	char realFile[FILENAME_MAX];
+	Node *cur;
+	Reserve *tmp;
+
+	sprintf(realFile, "%s%s", "C:/Data/", fileName);
+
+	fp = fopen(realFile, "w");
+	assert(fp != NULL);
+
+	cur = rlist->head->next;
+	while (cur != rlist->tail) {
+		tmp = (Reserve *)(cur + 1);
+		fprintf(fp, "%s\n%d\n%d\n%d\n%d\n", tmp->deviceName, tmp->hour, tmp->min, tmp->reStatus, tmp->mode);
+		cur = cur->next;
+	}
+	fclose(fp);
+}
+
+void statusWrite(List *slist, const char *fileName)
+{
+	FILE *fp;
+	char realFile[FILENAME_MAX];
+	Node *cur;
+	Status *tmp;
+
+	sprintf(realFile, "%s%s", "C:/Data/", fileName);
+
+	fp = fopen(realFile, "w");
+	assert(fp != NULL);
+
+	cur = slist->head->next;
+	while (cur != slist->tail) {
+		tmp = (Status *)(cur + 1);
+		fprintf(fp, "%s\n%d\n%d\n%d\n", tmp->deviceName, tmp->status, tmp->mode, tmp->temper);
+		cur = cur->next;
+	}
 	fclose(fp);
 }
 

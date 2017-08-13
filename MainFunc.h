@@ -15,6 +15,10 @@ void reserveRead(List *rlist,const char *fileName);
 void statusRead(List *slist,const char *fileName);
 void environRead(List *elist,const char *filName);
 void fileWrite(List *list, const char *fileName);	// list의 정보를 해당 파일에 저장한다
+void deviceWrite(List *dlist, const char *fileName);
+void reserveWrite(List *rlist, const char *fileName);
+void statusWrite(List *slist, const char *fileName);
+
 void mainMenu();	// Main 메뉴들을 출력.
 void gotoxy(int, int);
 void printMain(List *slist);
