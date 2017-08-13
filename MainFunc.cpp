@@ -28,7 +28,7 @@ void mainMenu()
 		createList(&list[i]);
 		fileRead(&list[i], fileName[i]);
 	}	// list[0] : dlist, list[1] : rlist,  list[2] : slist, list[3] : elist, list[4] : infolist
-	/*
+	
 	while (1) {
 		if (kbhit()) {
 			choice = getch();
@@ -45,10 +45,10 @@ void mainMenu()
 				break;
 			}
 		}
+		executeReserve(&list[1], &list[2]);
 		printMain(&list[2]);
 	}
-	*/
-	executeReserve(&list[1], &list[2]);
+	
 	for (i = 0; i < 3; i++)
 		fileWrite(&list[i], fileName[i]);
 	for (i = 0; i < sizeof(list) / sizeof(list[0]); i++) 
