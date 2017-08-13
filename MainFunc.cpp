@@ -71,6 +71,7 @@ void mainMenu()
 		}
 		executeReserve(&list[1], &list[2]);
 		printMain(&list[2]);
+		printf("\n 장치설정은 해당 장치의 알파벳을 / ON/OFF기능을 원하시면 알파벳 'O'를 / ESC키를 누르시면 프로그램이 종료 됩니다.  ");
 	}
 	
 	for (i = 0; i < 3; i++)
@@ -411,7 +412,7 @@ void printMain(List *slist)
 		strcpy(st2, "");
 		j++;
 	}
-	printf("\n 장치설정은 해당 장치의 알파벳을 / ON/OFF기능을 원하시면 알파벳 'O'를 / ESC키를 누르시면 프로그램이 종료 됩니다.  ");
+	
 }
 
 void gotoxy(int x, int y)
@@ -752,33 +753,14 @@ void laundMenu(List *slist, List *rlist)
 		}
 		else if (n == '2') {
 			((Status*)(cur + 1))->mode = Mode(deviceName[LAUNDRY]);
+			system("cls");
 		}
-		else if (n == 'r')
+		else if (n == 'r') 
 			return;
 		continue;
 	}
 }
 /*
-void laundMenu(List *slist)
-{
-	Node *cur;
-	Status temp;
-	statusInit(&temp);
-	strcpy(temp.deviceName, deviceName[LAUNDRY]);
-	cur = slist->head->next;
-	while (cur != slist->tail) {
-		if (statusNameCmp(cur + 1, &temp) == 1)
-			break;
-		else if (cur->next == slist->tail) {
-			printf("장치가 등록되어 있지 않습니다. 메인 메뉴로 돌아갑니다.\n");
-			getch();
-			return;
-		}
-		cur = cur->next;
-	}
-	setLaund();
-
-}
 void aircleanMenu(List *slist)
 {
 	Node *cur;
